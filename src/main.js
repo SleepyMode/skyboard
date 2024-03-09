@@ -1,9 +1,9 @@
 
 import * as path from 'path';
-import * as http from 'http';
 import {Router} from './lib/routing/router.js';
 import * as fs from 'fs/promises';
-import * as security from "./lib/security.js";
+import * as security from './lib/security.js';
+import {App} from './core/app.js';
 
 security.init();
 
@@ -28,18 +28,5 @@ Router.getInstance().defineRoute('GET', '/test/:test-:test2', (args, req, res) =
     res.end('<html lang="en"><body>Testing with args...</body></html>');
 })
 
-const server = http.createServer((req, res) => {
-    console.log('----- new request ------');
-    console.log('method', req.method);
-    console.log('url', req.url);
-    console.log('----- end request ------');
-
-    const [route, match] = Router.getInstance().parse(req);
-    if (route == null) {
-        res.writeHead(404, { 'Content-Type': 'text/html' });
-        res.end('<html lang="en"><body>Not found.</body></html>');
-        return;
-    }
-
-    route.handler(match.params, req, res);
-}).listen(3123);
+const app = App.getInstance();
+app.initialize();

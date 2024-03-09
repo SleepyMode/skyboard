@@ -1,5 +1,7 @@
-import {Database} from "../lib/database/database.js";
-import {EventManager} from "../lib/events/eventmanager.js";
+import {Database} from '../lib/database/database.js';
+import {EventManager} from '../lib/events/eventmanager.js';
+import * as http from 'http';
+import {Router} from '../lib/routing/router.js';
 
 export class App {
     static #instance = null;
@@ -12,13 +14,34 @@ export class App {
         return this.#instance;
     }
 
+    server;
+
     initialize() {
         EventManager.getInstance().addListener('databaseConnected', 'appDbConnected', this.onDatabaseConnected);
+
+        this.server = http.createServer(this.requestListener).listen(3000);
+
         EventManager.getInstance().dispatch('coreAppInitialized');
     }
 
     shutdown() {
         EventManager.getInstance().removeListener('databaseConnected', 'appDbConnected');
+    }
+
+    requestListener(req, res) {
+        console.log('----- new request ------');
+        console.log('method', req.method);
+        console.log('url', req.url);
+        console.log('----- end request ------');
+
+        const [route, match] = Router.getInstance().parse(req);
+        if (route == null) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end('<html lang="en"><body>Not found.</body></html>');
+            return;
+        }
+
+        route.handler(match.params, req, res);
     }
 
     onDatabaseConnected() {
