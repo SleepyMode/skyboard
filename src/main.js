@@ -8,9 +8,10 @@ import {App} from './core/app.js';
 security.init();
 
 const cwd = process.cwd();
-if (await fs.access(path.join(cwd, '.cwdhelper'))) {
+try {
+    await fs.access(path.join(cwd, '.cwdhelper'))
     globalThis.sbRoot = path.join(process.cwd(), '../');
-} else {
+} catch {
     globalThis.sbRoot = process.cwd();
 }
 
