@@ -9,7 +9,7 @@ security.init();
 
 const cwd = process.cwd();
 try {
-    await fs.access(path.join(cwd, '.cwdhelper'))
+    await fs.access(path.join(cwd, '.cwdhelper'));
     globalThis.sbRoot = path.join(process.cwd(), '../');
 } catch {
     globalThis.sbRoot = process.cwd();
