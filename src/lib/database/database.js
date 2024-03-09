@@ -1,7 +1,7 @@
 
 import {DbMySQLDriver} from './drivers/mysql.js';
-import {Query} from "./query.js";
-import {EventManager} from "../events/eventmanager.js";
+import {Query} from './query.js';
+import {EventManager} from '../events/eventmanager.js';
 
 export class Database {
     static #instance = null;
