@@ -1,0 +1,42 @@
+
+# SkyBoard uses drivers to allow connection to different database types.
+# The following options are acceptable:
+# - mysql
+# - postgres OR postgresql  (NOTE: Not implemented)
+# - mssql                   (NOTE: Not implemented)
+driver: mysql
+
+# The hostname is the host of your connection.
+# If you're hosting this locally, the hostname will be 'localhost'.
+# An example of a remote host can be db1.example.com
+hostname: localhost
+
+# The username that you'll be connecting to the database with.
+# Note that leaving this as root is generally considered bad
+# practice due to security concerns.
+username: root
+
+# The password of your user. It is considered bad practice to
+# leave a user without a password.
+password: ~
+
+# The database name to use within the server. If you're hosting
+# the database yourself, it is recommended to create an isolated
+# database for SkyBoard.
+database: dev
+
+# The port of the connection to the database. In MySQL databases
+# this is typically 3306.
+# If you're not sure, set this to ~ to nullify it and allow the
+# driver to try and use the default, though it may not work.
+port: 3306
+
+# The character set to use within the database.
+# Especially in Azure, by default, the database does not necessarily
+# support non-latin characters.
+# If you're not sure, leave it as it is.
+charset: ~
+
+# The timezone to set for the databases' times. If you're not sure,
+# leave it as it is.
+timezone: ~

@@ -1,0 +1,6 @@
+name: Test Plugin
+description: A plugin made for testing the plugin system.
+author: SleepyMode
+version: 1.0.0
+class: TestPlugin
+dependencies: []

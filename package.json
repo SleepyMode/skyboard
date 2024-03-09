@@ -1,0 +1,11 @@
+{
+  "name": "skyboard",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "yaml": "^2.4.0",
+    "path-to-regexp": "^6.2.1"
+  }
+}
