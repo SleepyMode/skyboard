@@ -2,6 +2,7 @@ import {Database} from '../lib/database/database.js';
 import {EventManager} from '../lib/events/eventmanager.js';
 import * as http from 'http';
 import {Router} from '../lib/routing/router.js';
+import {Context} from './context.js';
 
 export class App {
     static #instance = null;
@@ -36,12 +37,14 @@ export class App {
 
         const [route, match] = Router.getInstance().parse(req);
         if (route == null) {
-            res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end('<html lang="en"><body>Not found.</body></html>');
+            new Context(req, res, {})
+                .setStatusCode(404)
+                .setContent('<html lang="en"><body>Not found.</body></html>')
+                .send();
             return;
         }
 
-        route.handler(match.params, req, res);
+        route.handler(new Context(req, res, match.params));
     }
 
     onDatabaseConnected() {

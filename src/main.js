@@ -15,16 +15,16 @@ try {
     globalThis.sbRoot = process.cwd();
 }
 
-Router.getInstance().defineRoute('GET', '/', (args, req, res) => {
-    console.log(args);
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end('<html lang="en"><body>Testing...</body></html>');
+Router.getInstance().defineRoute('GET', '/', (ctx) => {
+    console.log(ctx.arguments);
+    ctx.setContent('<html lang="en"><body>Testing...</body></html>')
+        .send();
 });
 
-Router.getInstance().defineRoute('GET', '/test/:test-:test2', (args, req, res) => {
-    console.log(args);
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end('<html lang="en"><body>Testing with args...</body></html>');
+Router.getInstance().defineRoute('GET', '/test/:test-:test2', (ctx) => {
+    console.log(ctx.arguments);
+    ctx.setContent('<html lang="en"><body>Testing with args...</body></html>')
+        .send();
 })
 
 const app = App.getInstance();
