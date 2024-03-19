@@ -3,6 +3,10 @@ import {EventManager} from '../lib/events/eventmanager.js';
 import * as http from 'http';
 import {Router} from '../lib/routing/router.js';
 import {Context} from './context.js';
+import {PluginManager} from '../lib/plugins/pluginmanager.js';
+import path from 'path';
+import fs from 'fs/promises';
+import YAML from 'yaml';
 
 export class App {
     static #instance = null;
@@ -17,8 +21,24 @@ export class App {
 
     server;
 
-    initialize() {
+    async initialize() {
+        // Set up listeners so that plugins can modify these.
+        // If it was just a function call it'd be more difficult
+        // to modify the core app's behavior.
         EventManager.getInstance().addListener('databaseConnected', 'appDbConnected', this.onDatabaseConnected);
+        EventManager.getInstance().addListener('setupRoutes', 'appSetupRoutes', this.setupRoutes);
+
+        await PluginManager.getInstance().loadAllPlugins();
+        EventManager.getInstance().dispatch('pluginsLoaded');
+
+        const dbConfigPath = path.join(globalThis.sbRoot, '/config/database.yaml');
+        const dbConfigFile = await fs.readFile(dbConfigPath, {
+            encoding: 'utf8'
+        });
+        const dbConfig = YAML.parse(dbConfigFile);
+        await Database.getInstance().connect(dbConfig);
+
+        EventManager.getInstance().dispatch('setupRoutes');
 
         this.server = http.createServer(this.requestListener).listen(3000);
 
@@ -93,5 +113,19 @@ export class App {
             .create('message', 'TEXT')
             .primaryKey('uid')
             .execute();
+    }
+
+    setupRoutes() {
+        Router.getInstance().defineRoute('GET', '/', (ctx) => {
+            console.log(ctx.arguments);
+            ctx.setContent('<html lang="en"><body>Testing...</body></html>')
+                .send();
+        });
+
+        Router.getInstance().defineRoute('GET', '/test/:test-:test2', (ctx) => {
+            console.log(ctx.arguments);
+            ctx.setContent('<html lang="en"><body>Testing with args...</body></html>')
+                .send();
+        })
     }
 }
