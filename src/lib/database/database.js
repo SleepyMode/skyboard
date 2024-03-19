@@ -40,7 +40,7 @@ export class Database {
     }
 
     rawQuery(str, callback) {
-        return this.#driver.rawQuery(str, callback);
+        return this.#driver.query(str, callback);
     }
 
     escape(str) {
