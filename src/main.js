@@ -9,9 +9,14 @@ security.init();
 const cwd = process.cwd();
 try {
     await fs.access(path.join(cwd, '.cwdhelper'));
-    globalThis.sbRoot = path.join(process.cwd(), '../');
+    globalThis.sbRoot = cwd;
 } catch {
-    globalThis.sbRoot = process.cwd();
+    if (process.env.SB_ROOT) {
+        globalThis.sbRoot = process.env.SB_ROOT
+    } else {
+        console.error('Failed to find SkyBoard\'s root. Set the SB_ROOT environment variable manually.');
+        process.exit(100);
+    }
 }
 
 const app = App.getInstance();
