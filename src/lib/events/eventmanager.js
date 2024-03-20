@@ -39,10 +39,10 @@ export class EventManager {
             return;
         }
 
-        this.listeners[eventName].forEach((callback) => {
+        for (const [_, callback] in Object.entries(this.listeners[eventName])) {
             if (callback != null) {
                 callback(...args);
             }
-        });
+        }
     }
 }
