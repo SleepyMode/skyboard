@@ -39,7 +39,7 @@ export class EventManager {
             return;
         }
 
-        for (const [_, callback] in Object.entries(this.listeners[eventName])) {
+        for (const [_, callback] of Object.entries(this.listeners[eventName])) {
             if (callback != null) {
                 callback(...args);
             }
