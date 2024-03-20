@@ -118,7 +118,9 @@ export class App {
     setupRoutes() {
         Router.getInstance().defineRoute('GET', '/', (ctx) => {
             console.log(ctx.arguments);
-            ctx.setContent('<html lang="en"><body>Testing...</body></html>')
+            //ctx.setContent('<html lang="en"><body>Testing...</body></html>')
+            //    .send();
+            ctx.setView('index', {})
                 .send();
         });
 

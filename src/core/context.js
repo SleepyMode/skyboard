@@ -1,3 +1,6 @@
+import path from 'path';
+import fs from 'fs';
+import * as ejs from 'ejs';
 
 export class Context {
     request;
@@ -27,6 +30,23 @@ export class Context {
 
     setContent(content) {
         this.content = content;
+        return this;
+    }
+
+    setView(viewName, data) {
+        const file = path.join(globalThis.sbRoot, `/src/views/${viewName}.ejs`);
+        console.log(file);
+
+        try {
+            fs.accessSync(file);
+            this.content = ejs.render(fs.readFileSync(file, {encoding: 'utf-8'}), data || {}, {
+                root: globalThis.sbRoot
+            });
+        } catch (e) {
+            console.error(e);
+            this.content = '<b>Invalid view path</b>';
+        }
+
         return this;
     }
 
