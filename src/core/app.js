@@ -49,6 +49,31 @@ export class App {
         EventManager.getInstance().removeListener('databaseConnected', 'appDbConnected');
     }
 
+    async setupDatabase() {
+        const configPath = path.join(globalThis.sbRoot, '/config/database.yaml');
+
+        // This is awful. The base assumption is that exceptions should truly be
+        // 'exceptional', and not part of the control flow. I'd prefer a different
+        // way to go around this.
+        try {
+            await fs.access(configPath);
+        } catch {
+            const defaultPath = path.join(globalThis.sbRoot, '/config/database.default.yaml');
+
+            try {
+                await fs.access(defaultPath);
+                await fs.copyFile(defaultPath, configPath, fs.constants.COPYFILE_EXCL);
+            } catch {
+                // TODO: Handle, can't copy default config to path.
+            }
+        }
+
+        const dbConfig = YAML.parse(await fs.readFile(configPath, {
+            encoding: 'utf8'
+        }));
+        await Database.getInstance().connect(dbConfig);
+    }
+
     requestListener(req, res) {
         console.log('----- new request ------');
         console.log('method', req.method);
