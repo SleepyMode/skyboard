@@ -1,8 +1,4 @@
 
-import YAML from 'yaml';
-import * as fs from 'fs';
-import * as path from 'path';
-
 export class DbConfig {
     driver;
 
@@ -23,13 +19,5 @@ export class DbConfig {
         this.port = port;
         this.charset = charset;
         this.timezone = timezone;
-    }
-
-    static loadConfig() {
-        const configPath = path.join(globalThis.sbRoot, '/config/database.yaml');
-        const config = YAML.parse(fs.readFileSync(configPath, 'utf8'));
-        console.log(config);
-        return new DbConfig(config.driver, config.hostname, config.username,
-            config.database, config.port, config.charset, config.timezone);
     }
 }
