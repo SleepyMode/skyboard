@@ -1,5 +1,5 @@
 
-import * as mysql from 'mysql';
+import mysql from 'mysql2';
 
 export class DbMySQLDriver {
     #connection;
