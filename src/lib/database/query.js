@@ -41,42 +41,42 @@ export class Query {
     }
 
     where(key, value) {
-        this.#whereList.push(`\`${key}\` = '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` = ${this.#escape(value)}`);
         return this;
     }
 
     whereNot(key, value) {
-        this.#whereList.push(`\`${key}\` != '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` != ${this.#escape(value)}`);
         return this;
     }
 
     whereLike(key, value) {
-        this.#whereList.push(`\`${key}\` LIKE '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` LIKE ${this.#escape(value)}`);
         return this;
     }
 
     whereNotLike(key, value) {
-        this.#whereList.push(`\`${key}\` NOT LIKE '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` NOT LIKE ${this.#escape(value)}`);
         return this;
     }
 
     whereGT(key, value) {
-        this.#whereList.push(`\`${key}\` > '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` > ${this.#escape(value)}`);
         return this;
     }
 
     whereLT(key, value) {
-        this.#whereList.push(`\`${key}\` < '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` < ${this.#escape(value)}`);
         return this;
     }
 
     whereGTE(key, value) {
-        this.#whereList.push(`\`${key}\` >= '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` >= ${this.#escape(value)}`);
         return this;
     }
 
     whereLTE(key, value) {
-        this.#whereList.push(`\`${key}\` <= '${this.#escape(value)}'`);
+        this.#whereList.push(`\`${key}\` <= ${this.#escape(value)}`);
         return this;
     }
 
@@ -97,12 +97,12 @@ export class Query {
 
     insert(key, value) {
         this.#insertList.keys.push(`\`${key}\``);
-        this.#insertList.values.push(`'${this.#escape(value)}'`);
+        this.#insertList.values.push(`${this.#escape(value)}`);
         return this;
     }
 
     update(key, value) {
-        this.#updateList.push([`\`${key}\``, `'${this.#escape(value)}'`]);
+        this.#updateList.push([`\`${key}\``, `${this.#escape(value)}`]);
         return this;
     }
 
@@ -167,8 +167,8 @@ export class Query {
     }
 
     #buildInsertQuery(insertIgnore = false) {
-        return `${(insertIgnore) ? 'INSERT IGNORE INTO ' : 'INSERT INTO '} \`${this.#tableName}\`
-        (${this.#insertList.keys.join(', ')}) VALUES (${this.#insertList.values.join(', ')})`;
+        return `${(insertIgnore) ? 'INSERT IGNORE INTO ' : 'INSERT INTO '} \`${this.#tableName}\``
+        + `(${this.#insertList.keys.join(', ')}) VALUES (${this.#insertList.values.join(', ')})`;
     }
 
     #buildUpdateQuery() {
@@ -247,6 +247,8 @@ export class Query {
             case Query.ALTER: sqlString = this.#buildAlterQuery(); break;
             case Query.DROP: sqlString = this.#buildDropQuery(); break;
         }
+
+        sqlString = sqlString.trimEnd() + ';';
 
         Database.getInstance().rawQuery(sqlString, this.#callback);
     }
