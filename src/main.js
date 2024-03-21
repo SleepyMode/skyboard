@@ -1,10 +1,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import * as security from './lib/security.js';
 import {App} from './core/app.js';
-
-security.init();
 
 const cwd = process.cwd();
 try {
