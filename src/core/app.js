@@ -31,12 +31,7 @@ export class App {
         await PluginManager.getInstance().loadAllPlugins();
         EventManager.getInstance().dispatch('pluginsLoaded');
 
-        const dbConfigPath = path.join(globalThis.sbRoot, '/config/database.yaml');
-        const dbConfigFile = await fs.readFile(dbConfigPath, {
-            encoding: 'utf8'
-        });
-        const dbConfig = YAML.parse(dbConfigFile);
-        await Database.getInstance().connect(dbConfig);
+        await this.setupDatabase();
 
         EventManager.getInstance().dispatch('setupRoutes');
 
