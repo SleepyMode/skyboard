@@ -40,18 +40,14 @@ export class Query {
         return Database.getInstance().escape(str);
     }
 
-    whereEqual(key, value) {
+    where(key, value) {
         this.#whereList.push(`\`${key}\` = '${this.#escape(value)}'`);
         return this;
     }
 
-    whereNotEqual(key, value) {
+    whereNot(key, value) {
         this.#whereList.push(`\`${key}\` != '${this.#escape(value)}'`);
         return this;
-    }
-
-    where(key, value) {
-        return this.whereEqual(key, value);
     }
 
     whereLike(key, value) {
