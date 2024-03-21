@@ -77,8 +77,8 @@ export class App {
         route.handler(new Context(req, res, match.params));
     }
 
-    onDatabaseConnected() {
-        Database.create('sb_users')
+    async onDatabaseConnected() {
+        await Database.create('sb_users')
             .create('uid', 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
             .create('username', 'VARCHAR(120) NOT NULL')
             .create('password', 'VARCHAR(120) NOT NULL')
@@ -86,7 +86,7 @@ export class App {
             .primaryKey('uid')
             .execute();
 
-        Database.create('sb_usergroups')
+        await Database.create('sb_usergroups')
             .create('uid', 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
             .create('name', 'VARCHAR(120) NOT NULL')
             .create('permissions', 'TEXT NOT NULL')
@@ -94,7 +94,7 @@ export class App {
             .execute();
 
         // both forums and categories
-        Database.create('sb_forums')
+        await Database.create('sb_forums')
             .create('uid', 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
             .create('name', 'VARCHAR(120) NOT NULL')
             .create('description', 'VARCHAR(120) DEFAULT NULL')
@@ -106,7 +106,7 @@ export class App {
             .primaryKey('uid')
             .execute();
 
-        Database.create('sb_threads')
+        await Database.create('sb_threads')
             .create('uid', 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
             .create('owner', 'INT(11) UNSIGNED NOT NULL')
             .create('title', 'VARCHAR(120) NOT NULL')
@@ -115,7 +115,7 @@ export class App {
             .primaryKey('uid')
             .execute();
 
-        Database.create('sb_posts')
+        await Database.create('sb_posts')
             .create('uid', 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT')
             .create('owner', 'INT(11) UNSIGNED NOT NULL')
             .create('thread', 'INT(11) UNSIGNED NOT NULL')

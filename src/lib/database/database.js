@@ -38,7 +38,19 @@ export class Database {
         return this.#driver.disconnect();
     }
 
-    rawQuery(str, callback) {
+    async query(str) {
+        return new Promise((resolve, reject) => {
+            this.#driver.query(str, (err, res) => {
+                if (err != null) {
+                    return reject(err);
+                }
+
+                resolve(res);
+            });
+        });
+    }
+
+    querySync(str, callback) {
         return this.#driver.query(str, callback);
     }
 

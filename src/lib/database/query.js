@@ -233,7 +233,7 @@ export class Query {
         return sqlString;
     }
 
-    execute() {
+    #build() {
         let sqlString;
 
         switch (this.#queryType) {
@@ -249,7 +249,14 @@ export class Query {
         }
 
         sqlString = sqlString.trimEnd() + ';';
+        return sqlString;
+    }
 
-        Database.getInstance().rawQuery(sqlString, this.#callback);
+    executeSync() {
+        Database.getInstance().querySync(this.#build(), this.#callback);
+    }
+
+    async execute() {
+        return Database.getInstance().query(this.#build());
     }
 }
