@@ -19,8 +19,7 @@ export class Database {
     connect(dbConfig) {
         switch (dbConfig.driver.toLowerCase()) {
             case 'mysql':
-                // todo: config???
-                this.#driver = new DbMySQLDriver();
+                this.#driver = new DbMySQLDriver(dbConfig);
                 break;
             case 'postgres':
             case 'postgresql':
