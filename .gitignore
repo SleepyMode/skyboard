@@ -5,3 +5,6 @@ node_modules/
 
 # JetBrains
 .idea/
+
+# Non-Default Configs
+config/database.yaml
