@@ -13,26 +13,21 @@ export async function fileExists(filePath) {
 }
 
 export async function readFile(filePath) {
-    const fixedPath = path.join(globalThis.sbRoot, filePath);
-
-    if (!(await fileExists(fixedPath))) {
+    if (!await fileExists(filePath)) {
         return null;
     }
-
-    return await fsp.readFile(fixedPath, {
+    return await fsp.readFile(path.join(globalThis.sbRoot, filePath), {
         encoding: 'utf-8'
     });
 }
 
 export async function copyFile(filePath, newPath) {
-    const oldFilePath = path.join(globalThis.sbRoot, filePath);
-    const newFilePath = path.join(globalThis.sbRoot, newPath);
-
-    if (!(await fileExists(oldFilePath)) || await fileExists(newFilePath)) {
+    if (!await fileExists(filePath) || await fileExists(newPath)) {
         return false;
     }
 
-    await fsp.copyFile(oldFilePath, newFilePath);
+    await fsp.copyFile(path.join(globalThis.sbRoot, filePath),
+        path.join(globalThis.sbRoot, newPath));
     return true;
 }
 
@@ -53,25 +48,21 @@ export function fileExistsSync(filePath) {
 }
 
 export function readFileSync(filePath) {
-    const fixedPath = path.join(globalThis.sbRoot, filePath);
-
     if (!fileExistsSync(filePath)) {
         return null;
     }
 
-    return fs.readFileSync(fixedPath, {
+    return fs.readFileSync(path.join(globalThis.sbRoot, filePath), {
         encoding: 'utf-8'
     });
 }
 
 export function copyFileSync(filePath, newPath) {
-    const oldFilePath = path.join(globalThis.sbRoot, filePath);
-    const newFilePath = path.join(globalThis.sbRoot, newPath);
-
-    if (!fileExistsSync(oldFilePath) || fileExistsSync(newFilePath)) {
+    if (!fileExistsSync(filePath) || fileExistsSync(newPath)) {
         return false;
     }
 
-    fs.copyFileSync(oldFilePath, newFilePath);
+    fs.copyFileSync(path.join(globalThis.sbRoot, filePath),
+        path.join(globalThis.sbRoot, newPath));
     return true;
 }
