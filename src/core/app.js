@@ -4,8 +4,7 @@ import * as http from 'http';
 import {Router} from '../lib/routing/router.js';
 import {Context} from './context.js';
 import {PluginManager} from '../lib/plugins/pluginmanager.js';
-import path from 'path';
-import fs from 'fs/promises';
+import * as fs from '../lib/filesystem.js';
 import YAML from 'yaml';
 
 export class App {
@@ -45,27 +44,18 @@ export class App {
     }
 
     async setupDatabase() {
-        const configPath = path.join(globalThis.sbRoot, '/config/database.yaml');
+        const configPath = '/config/database.yaml';
 
-        // This is awful. The base assumption is that exceptions should truly be
-        // 'exceptional', and not part of the control flow. I'd prefer a different
-        // way to go around this.
-        try {
-            await fs.access(configPath);
-        } catch {
-            const defaultPath = path.join(globalThis.sbRoot, '/config/database.default.yaml');
+        if (!await fs.fileExists(configPath)) {
+            const defaultPath = '/config/database.default.yaml';
 
-            try {
-                await fs.access(defaultPath);
-                await fs.copyFile(defaultPath, configPath, fs.constants.COPYFILE_EXCL);
-            } catch {
-                // TODO: Handle, can't copy default config to path.
+            if (!await fs.copyFile(defaultPath, configPath)) {
+                // TODO: Handle not being able to connect.
+                return;
             }
         }
 
-        const dbConfig = YAML.parse(await fs.readFile(configPath, {
-            encoding: 'utf8'
-        }));
+        const dbConfig = YAML.parse(await fs.readFile(configPath));
         await Database.getInstance().connect(dbConfig);
     }
 

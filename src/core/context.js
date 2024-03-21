@@ -1,5 +1,5 @@
 import path from 'path';
-import fs from 'fs';
+import * as fs from '../lib/filesystem.js';
 import * as ejs from 'ejs';
 
 export class Context {
@@ -37,15 +37,14 @@ export class Context {
         const file = path.join(globalThis.sbRoot, `/src/views/${viewName}.ejs`);
         console.log(file);
 
-        try {
-            fs.accessSync(file);
-            this.content = ejs.render(fs.readFileSync(file, {encoding: 'utf-8'}), data || {}, {
-                root: globalThis.sbRoot
-            });
-        } catch (e) {
-            console.error(e);
+        if (!fs.fileExistsSync(file)) {
             this.content = '<b>Invalid view path</b>';
+            return;
         }
+
+        this.content = ejs.render(fs.readFileSync(file, {encoding: 'utf-8'}), data || {}, {
+            root: globalThis.sbRoot
+        });
 
         return this;
     }
