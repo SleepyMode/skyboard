@@ -2,6 +2,7 @@
 import * as path from 'path';
 import * as fs from '../filesystem.js';
 import YAML from 'yaml';
+import {Log} from '../log/log.js';
 
 export class PluginManager {
     static #instance = null;
@@ -15,11 +16,13 @@ export class PluginManager {
     }
 
     plugins = {};
+    log = Log.getLogger('Plugin Manager');
 
     // TODO: Error handling
     async loadAllPlugins() {
         const pluginsPath = path.join(globalThis.sbRoot, '/plugins');
-        console.log(pluginsPath);
+        this.log.verbose(`Loading all plugins from path: ${pluginsPath}`);
+
         const entries = await fs.readDir(pluginsPath, {
             withFileTypes: true
         });
@@ -31,23 +34,32 @@ export class PluginManager {
         }
     }
 
-    // TODO: Resolve dependencies
+    // TODO: Unloading
     async loadPlugin(uniqueId) {
         if (uniqueId in this.plugins) {
-            // TODO: log?
+            this.log.verbose(`Skipping already loaded plugin ${uniqueId}`);
             return;
         }
 
-        const configPath = path.join(globalThis.sbRoot, `/plugins/${uniqueId}/plugin.yaml`);
+        this.log.info(`Loading plugin ${uniqueId}`);
 
-        // TODO: Error handling
+        const configPath = `/plugins/${uniqueId}/plugin.yaml`;
+
         if (!await fs.fileExists(configPath)) {
+            this.log.caution(`Failed to load plugin ${uniqueId}: plugin.yaml not found.`);
             return;
         }
 
         const config = YAML.parse(await fs.readFile(configPath, {
             encoding: 'utf8'
         }));
+
+        const dependencies = config.dependencies;
+        if (dependencies && typeof dependencies === 'object') {
+            for (let i = 0; i < dependencies.length; ++i) {
+                await this.loadPlugin(dependencies[i]);
+            }
+        }
 
         const modPath = path.join('file:///', globalThis.sbRoot, `/plugins/${uniqueId}/plugin.js`);
         const pluginMod = await import(modPath);
@@ -56,5 +68,7 @@ export class PluginManager {
             info: config,
             instance: new mainClass()
         };
+
+        this.plugins[uniqueId].instance.onLoad();
     }
 }
