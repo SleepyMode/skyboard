@@ -6,6 +6,7 @@ import {Context} from './context.js';
 import {PluginManager} from '../lib/plugins/pluginmanager.js';
 import * as fs from '../lib/filesystem.js';
 import YAML from 'yaml';
+import {Log} from '../lib/log/log.js';
 
 export class App {
     static #instance = null;
@@ -19,8 +20,12 @@ export class App {
     }
 
     server;
+    log;
 
     async initialize() {
+        this.log = Log.getLogger('App');
+        this.log.info('Application starting up.');
+
         // Set up listeners so that plugins can modify these.
         // If it was just a function call it'd be more difficult
         // to modify the core app's behavior.
@@ -37,6 +42,7 @@ export class App {
         this.server = http.createServer(this.requestListener).listen(3000);
 
         EventManager.getInstance().dispatch('coreAppInitialized');
+        this.log.info('Application ready.');
     }
 
     shutdown() {
