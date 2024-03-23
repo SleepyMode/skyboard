@@ -1,4 +1,3 @@
-import path from 'path';
 import * as fs from '../lib/filesystem.js';
 import * as ejs from 'ejs';
 
@@ -33,9 +32,8 @@ export class Context {
         return this;
     }
 
-    setView(viewName, data) {
-        const file = path.join(globalThis.sbRoot, `/src/views/${viewName}.ejs`);
-        console.log(file);
+    setView(viewName, data, root = '/core/views') {
+        const file = `${root}/${viewName}.ejs`;
 
         if (!fs.fileExistsSync(file)) {
             this.content = '<b>Invalid view path</b>';
