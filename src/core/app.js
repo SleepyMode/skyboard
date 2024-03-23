@@ -20,10 +20,9 @@ export class App {
     }
 
     server;
-    log;
+    log = Log.getLogger('App');
 
     async initialize() {
-        this.log = Log.getLogger('App');
         this.log.info('Application starting up.');
 
         // Set up listeners so that plugins can modify these.
