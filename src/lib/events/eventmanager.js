@@ -1,3 +1,4 @@
+import {Log} from '../log/log.js';
 
 export class EventManager {
     static #instance = null;
@@ -11,6 +12,7 @@ export class EventManager {
     }
 
     listeners = {};
+    log = Log.getLogger('Event Manager');
 
     addListener(eventName, uniqueId, callback) {
         if (!(eventName in this.listeners)) {
@@ -18,7 +20,7 @@ export class EventManager {
         }
 
         if (uniqueId in this.listeners[eventName]) {
-            // TODO log
+            this.log.caution(`Not adding listener '${uniqueId}' to event '${eventName}' as it is already registered.`);
             return;
         }
 
@@ -35,7 +37,7 @@ export class EventManager {
 
     dispatch(eventName, ...args) {
         if (!(eventName in this.listeners)) {
-            // TODO log
+            this.log.verbose(`Not dispatching event '${eventName}' as it has no listeners.`);
             return;
         }
 
