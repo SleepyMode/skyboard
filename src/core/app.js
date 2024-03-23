@@ -7,6 +7,7 @@ import {PluginManager} from '../lib/plugins/pluginmanager.js';
 import * as fs from '../lib/filesystem.js';
 import YAML from 'yaml';
 import {Log} from '../lib/log/log.js';
+import {UserHandler} from './handlers/user.js';
 
 export class App {
     static #instance = null;
@@ -131,10 +132,9 @@ export class App {
     }
 
     setupRoutes() {
+        UserHandler.setupRoutes();
+
         Router.getInstance().defineRoute('GET', '/', (ctx) => {
-            console.log(ctx.arguments);
-            //ctx.setContent('<html lang="en"><body>Testing...</body></html>')
-            //    .send();
             ctx.setView('index', {})
                 .send();
         });
