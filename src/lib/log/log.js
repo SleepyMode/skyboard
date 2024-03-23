@@ -17,23 +17,23 @@ export class Log {
     }
 
     static verbose(message) {
-        return this.getLogger('General').verbose(message);
+        this.getLogger('General').verbose(message);
     }
 
     static info(message) {
-        return this.getLogger('General').info(message);
+        this.getLogger('General').info(message);
     }
 
     static caution(message) {
-        return this.getLogger('General').caution(message);
+        this.getLogger('General').caution(message);
     }
 
     static warning(message) {
-        return this.getLogger('General').warning(message);
+        this.getLogger('General').warning(message);
     }
 
     static error(message) {
-        return this.getLogger('General').error(message);
+        this.getLogger('General').error(message);
     }
 
     loggers = {};
