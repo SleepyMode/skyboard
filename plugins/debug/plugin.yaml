@@ -1,0 +1,6 @@
+name: Debug
+description: Provides debugging utilities.
+author: SleepyMode
+version: 1.0.0
+class: DebugPlugin
+dependencies:

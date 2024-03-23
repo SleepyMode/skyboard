@@ -1,18 +1,10 @@
 
 export class TestPlugin {
-    install() {
-        console.log('TestPlugin::install');
+    onLoad() {
+        console.log('TestPlugin::onLoad');
     }
 
-    uninstall() {
-        console.log('TestPlugin::uninstall');
-    }
-
-    activate() {
-        console.log('TestPlugin::activate');
-    }
-
-    deactivate() {
+    onUnload() {
         console.log('TestPlugin::deactivate');
     }
 }
